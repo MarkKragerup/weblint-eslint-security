@@ -19,13 +19,40 @@ const ruleTester = new RuleTester({
 });
 
 ruleTester.run('no_href_and_src_inline_xss', rule, {
-    valid: [{
-        code: fs.readFileSync('tests/test-files/no_href_and_src_inline_xss/valid_safe_concat_binary.js', 'utf8')
-    },
+    valid: [
+        {
+            code: fs.readFileSync('tests/test-files/no_href_and_src_inline_xss/valid_safe_concat_binary.js', 'utf8')
+        },
+        {
+            code: fs.readFileSync('tests/test-files/no_href_and_src_inline_xss/valid_safe_latest_reassignment.js', 'utf8')
+        },
+        {
+            code: fs.readFileSync('tests/test-files/no_href_and_src_inline_xss/valid_safe_string_in_variable.js', 'utf8')
+        },
+        {
+            code: fs.readFileSync('tests/test-files/no_href_and_src_inline_xss/valid_template_string_w_safe_var.js', 'utf8')
+        },
+        {
+            code: fs.readFileSync('tests/test-files/no_href_and_src_inline_xss/valid_unsafe_input_gets_escaped.js', 'utf8')
+        },
     ],
 
-    invalid: [{
-        code: fs.readFileSync('tests/test-files/no_href_and_src_inline_xss/invalid_var_is_user_input.html', 'utf8'),
-        errors: [{message: "Don't fuck shit up!"}]
-    }]
+    invalid: [
+        {
+            code: fs.readFileSync('tests/test-files/no_href_and_src_inline_xss/invalid_safe_concat_w_unsafe_binary.js', 'utf8'),
+            errors: [{message: "href property value might be XSS vulnerable"}]
+        },
+        {
+            code: fs.readFileSync('tests/test-files/no_href_and_src_inline_xss/invalid_template_string_w_user_input.js', 'utf8'),
+            errors: [{message: "href property value might be XSS vulnerable"}]
+        },
+        {
+            code: fs.readFileSync('tests/test-files/no_href_and_src_inline_xss/invalid_var_is_user_input.js', 'utf8'),
+            errors: [{message: "href property value might be XSS vulnerable"}]
+        },
+        {
+            code: fs.readFileSync('tests/test-files/no_href_and_src_inline_xss/invalid_var_unsafe_reassign.js', 'utf8'),
+            errors: [{message: "href property value might be XSS vulnerable"}]
+        }
+    ]
 });
