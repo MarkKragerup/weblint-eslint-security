@@ -8,18 +8,24 @@
 const RuleTester = require('eslint').RuleTester;
 const rule = require('../../lib/rules/no_href_and_src_inline_xss');
 
-/* Set parsers somewhere - either in parserOptions or options of the rule test */
+const fs = require('fs');
 
-const ruleTester = new RuleTester();
+const parser = require('../parser').BABEL_ESLINT;
 
-/*ruleTester.run('no_href_and_src_inline_xss', rule, {
+console.log(parser);
+
+const ruleTester = new RuleTester({
+    parser: parser,
+});
+
+ruleTester.run('no_href_and_src_inline_xss', rule, {
     valid: [{
-        code: `a.href = "google.com"`
+        code: fs.readFileSync('tests/test-files/no_href_and_src_inline_xss/valid_safe_concat_binary.js', 'utf8')
     },
     ],
 
     invalid: [{
-        code: `a.href = userInput`,
+        code: fs.readFileSync('tests/test-files/no_href_and_src_inline_xss/invalid_var_is_user_input.html', 'utf8'),
         errors: [{message: "Don't fuck shit up!"}]
     }]
-});*/
+});
