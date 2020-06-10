@@ -119,7 +119,3 @@ dist
 .idea/modules.xml
 .idea/vcs.xml
 .idea/weblint-eslint-security.iml
-docs/
-lib/
-tests/rules/
-tests/test-code/
