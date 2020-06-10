@@ -1,6 +1,6 @@
 {
   "name": "weblint-eslint-security",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "ESLint rules for enhanced security",
   "main": "index.js",
   "scripts": {
