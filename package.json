@@ -1,7 +1,16 @@
 {
   "name": "weblint-eslint-security",
   "version": "1.0.0",
-  "dependencies": {
-    
-  }
+  "description": "ESLint rules for enhanced security",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "ESLint",
+    "Security",
+    "Weblint"
+  ],
+  "author": "Mark Kragerup & Mathias Høyrup Nielsen",
+  "license": "MIT"
 }
