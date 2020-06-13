@@ -17,3 +17,40 @@ The following patterns are considered warnings:
     
     document.body.appendChild(a);
 ```
+```
+    // Declare variable, initialised as a safe concatenation of two explicit strings
+    let googleLink = "google.com" + "/contact"
+    const userInput = prompt("What input do you like?");
+    
+    // Initialize iframe
+    let iframe = document.createElement("iframe");
+    
+    // Assign link value to the result of the safe addition, plus the result of some unsafe input
+    iframe.src = userInput + googleLink;
+    
+    document.body.appendChild(iframe);
+```
+```
+    const userInput = prompt("What input do you like?");
+    
+    // Create text link
+    let a = document.createElement("a");
+    const btn = document.createTextNode("Click here");
+    a.appendChild(btn);
+    
+    // Insert template string including variable value as link destination
+    a.href = `${userInput}`;
+    
+    document.body.appendChild(a);
+```
+```
+    const userInput = prompt("What input do you like?");
+    
+    // Initialize iframe
+    let iframe = document.createElement("iframe");
+    
+    // Insert template string including variable value as src destination
+    iframe.src = `${userInput}`;
+    
+    document.body.appendChild(iframe);
+```
