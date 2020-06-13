@@ -24,6 +24,11 @@ Include Weblint security plugin in your ESLint configuration file
 ]
 ```
 
+Include it also in the plugins section:
+```
+"plugins": [ 'weblint-security' ]
+```
+
 ### List of supported rules
 [no_href_and_src_inline_xss](./docs/rules/no_href_and_src_inline_xss.md)
 
