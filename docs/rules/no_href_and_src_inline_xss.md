@@ -16,7 +16,7 @@ The following patterns are considered warnings:
     
     document.body.appendChild(a);
 ```
-```
+```javascript
     const userInput = prompt("What input do you like?");
     
     // Initialize iframe
@@ -27,7 +27,7 @@ The following patterns are considered warnings:
     
     document.body.appendChild(iframe);
 ```
-```
+```javascript
     // Declare safe variable
     let googleLink = "google.com";
 
@@ -44,7 +44,7 @@ The following patterns are considered warnings:
 
     document.body.appendChild(a);
 ```
-```
+```javascript
     // Declare safe variable
     let googleLink = "google.com";
 
@@ -59,7 +59,7 @@ The following patterns are considered warnings:
 
     document.body.appendChild(iframe);
 ```
-```
+```javascript
     let googleLink = "google.com" + "/contact"
     const userInput = prompt("What input do you like?");
     
@@ -73,7 +73,7 @@ The following patterns are considered warnings:
     
     document.body.appendChild(a);
 ```
-```
+```javascript
     // Declare variable, initialised as a safe concatenation of two explicit strings
     let googleLink = "google.com" + "/contact"
     const userInput = prompt("What input do you like?");
@@ -86,7 +86,7 @@ The following patterns are considered warnings:
     
     document.body.appendChild(iframe);
 ```
-```
+```javascript
     const userInput = prompt("What input do you like?");
     
     // Create text link
@@ -99,7 +99,7 @@ The following patterns are considered warnings:
     
     document.body.appendChild(a);
 ```
-```
+```javascript
     const userInput = prompt("What input do you like?");
     
     // Initialize iframe
@@ -112,7 +112,7 @@ The following patterns are considered warnings:
 ```
 
 The following patterns are NOT considered warnings:
-```
+```javascript
     // Declare variable, initialised as a safe concatenation of two explicit strings
     let googleLink3 = "google.com" + "/contact";
 
@@ -126,8 +126,7 @@ The following patterns are NOT considered warnings:
 
     document.body.appendChild(a);
 ```
-
-```
+```javascript
     // Declare variable, initialised as a safe concatenation of two explicit strings
     let googleLink3 = "google.com" + "/contact";
 
@@ -139,8 +138,7 @@ The following patterns are NOT considered warnings:
 
     document.body.appendChild(iframe);
 ```
-
-```
+```javascript
     // Declare and initialise variable as explicit string
     let googleLink = "google.com";
 
@@ -160,8 +158,7 @@ The following patterns are NOT considered warnings:
 
     document.body.appendChild(a);
 ```
-
-```
+```javascript
     // Declare and initialise variable as explicit string
     let googleLink = "google.com";
 
@@ -194,8 +191,7 @@ The following patterns are NOT considered warnings:
 
     document.body.appendChild(a);
 ```
-
-```
+```javascript
     // Declare and initialise variable as explicit string
     let googleLink = "google.dk";
 
@@ -207,8 +203,7 @@ The following patterns are NOT considered warnings:
 
     document.body.appendChild(iframe);
 ```
-
-```
+```javascript
     const myLink = "google.com";
 
     // Create text link
@@ -221,8 +216,7 @@ The following patterns are NOT considered warnings:
 
     document.body.appendChild(a);
 ```
-
-```
+```javascript
     const myLink = "google.com";
 
     // Initilize iframe
@@ -233,8 +227,7 @@ The following patterns are NOT considered warnings:
 
     document.body.appendChild(iframe);
 ```
-
-```
+```javascript
     let userInput = prompt("What input do you like?");
 
     // Create text link
@@ -247,8 +240,7 @@ The following patterns are NOT considered warnings:
 
     document.body.appendChild(a);
 ```
-
-```
+```javascript
     let userInput = prompt("What input do you like?");
 
     // Initialize iframe
