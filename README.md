@@ -30,5 +30,5 @@ Include it also in the plugins section:
 ```
 
 ### List of supported rules
-[no_href_and_src_inline_xss](./docs/rules/no_href_and_src_inline_xss.md)
+[no_href_and_src_inline_xss](https://github.com/MarkKragerup/weblint-eslint-security/blob/master/docs/rules/no_href_and_src_inline_xss.md)
 
