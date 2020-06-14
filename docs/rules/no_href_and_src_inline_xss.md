@@ -3,7 +3,7 @@
 ## Rule details
 The following patterns are considered warnings:
 
-```
+```javascript
     const userInput = prompt("What input do you like?");
     
     // Create text link
