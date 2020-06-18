@@ -16,6 +16,7 @@ console.log(parser);
 
 const ruleTester = new RuleTester({
     parser: parser,
+    fix: false
 });
 
 ruleTester.run('no_href_and_src_inline_xss', rule, {
