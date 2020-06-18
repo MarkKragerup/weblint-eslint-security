@@ -32,7 +32,7 @@ Include it also in the plugins section:
 ### Testing
 
 ### Fixing
-List of rules that supports autofix with `eslint --fix`: <br/>
+List of rules that supports autofix with `eslint --fix .`: <br/>
 [no_href_and_src_inline_xss](https://github.com/MarkKragerup/weblint-eslint-security/blob/master/docs/rules/no_href_and_src_inline_xss.md)
 
 ### List of supported rules
