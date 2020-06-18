@@ -25,6 +25,9 @@ ruleTester.run('no_href_and_src_inline_xss', rule, {
             code: fs.readFileSync('tests/test-files/no_href_and_src_inline_xss/src/valid_src_safe_concat_binary.js', 'utf8')
         },
         {
+            code: fs.readFileSync('tests/test-files/no_href_and_src_inline_xss/src/fixed_src_safe_concat_w_unsafe_binary.js', 'utf8')
+        },
+        {
             code: fs.readFileSync('tests/test-files/no_href_and_src_inline_xss/src/valid_src_safe_latest_reassignment.js', 'utf8')
         },
         {
@@ -89,5 +92,11 @@ ruleTester.run('no_href_and_src_inline_xss', rule, {
             code: fs.readFileSync('tests/test-files/no_href_and_src_inline_xss/href/invalid_href_var_unsafe_reassign.js', 'utf8'),
             errors: [{message: "href property value might be XSS vulnerable"}]
         },
+        //testing of the fixer function
+        {
+            code: fs.readFileSync('tests/test-files/no_href_and_src_inline_xss/src/invalid_src_safe_concat_w_unsafe_binary.js', 'utf8'),
+            errors: [{message: "src property value might be XSS vulnerable"}],
+            output: fs.readFileSync('tests/test-files/no_href_and_src_inline_xss/src/fixed_src_safe_concat_w_unsafe_binary.js', 'utf8')
+        }
     ]
 });
