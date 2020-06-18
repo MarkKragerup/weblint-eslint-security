@@ -29,6 +29,12 @@ Include it also in the plugins section:
 "plugins": [ 'weblint-security' ]
 ```
 
+### Testing
+
+### Fixing
+List of rules that supports autofix with `eslint --fix`:
+[no_href_and_src_inline_xss](https://github.com/MarkKragerup/weblint-eslint-security/blob/master/docs/rules/no_href_and_src_inline_xss.md)
+
 ### List of supported rules
 [no_href_and_src_inline_xss](https://github.com/MarkKragerup/weblint-eslint-security/blob/master/docs/rules/no_href_and_src_inline_xss.md)
 
