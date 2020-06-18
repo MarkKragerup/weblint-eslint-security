@@ -12,11 +12,8 @@ const fs = require('fs');
 
 const parser = require('../parser').BABEL_ESLINT;
 
-console.log(parser);
-
 const ruleTester = new RuleTester({
-    parser: parser,
-    fix: false
+    parser: parser
 });
 
 ruleTester.run('no_href_and_src_inline_xss', rule, {
