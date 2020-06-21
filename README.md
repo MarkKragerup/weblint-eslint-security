@@ -2,7 +2,7 @@
 [![npm version](https://img.shields.io/npm/v/eslint-plugin-weblint-security.svg)](https://www.npmjs.com/package/eslint-plugin-weblint-security)
 [![Downloads/month](https://img.shields.io/npm/dm/eslint-plugin-weblint-security.svg)](http://www.npmtrends.com/eslint-plugin-weblint-security)
 
-Additional ESLint security rules for Javascript
+Additional ESLint security rules for Javascript, React and Node.js / Express!
 
 ## 💿 Installation
 Install ESLint either locally or globally. (Note that locally, per project, is strongly preferred)
@@ -23,22 +23,45 @@ Include Weblint security plugin in your **.eslintrc.json** configuration file ("
         "browser": true,
         "es2020": true
     },
+    "plugins": [
+        "weblint-security"
+    ].
     "extends": [
         "eslint:recommended",
         "plugin:weblint-security/recommended"
-    ],
-    "plugins": [
-        "weblint-security"
     ]
 }
 ```
+
+For **React** projects, include the **React specific** rules and config:
+````
+{
+    "env": {
+        "browser": true,
+        "es2020": true
+    },
+    "parserOptions": {
+        "sourceType": "module"
+    },
+    "parser": "babel-eslint",
+    "plugins": [
+        "weblint-security"
+    ],
+    "extends": [
+        "eslint:recommended",
+        "plugin:weblint-security/recommended",
+        "plugin:weblint-security/react"
+    ]
+}
+````
 
 ## 📖 Rules
 ✒️ - the mark of fixable rules. Use `eslint --fix .` to apply all available fixes to your project.
 
 | Rule ID | Description |    |
 |:--------|:------------|:--:|
-| [node/no-href-and-src-inline-xss](https://github.com/MarkKragerup/weblint-eslint-security/blob/master/docs/rules/no_href_and_src_inline_xss.md) | Disallows unescaped variables of uncertain <br/> origin from href and src attributes, due to the <br/>concern that they might originate from user input. | ✒️ |
+| [weblint-security/no-href-and-src-inline-xss](https://github.com/MarkKragerup/weblint-eslint-security/blob/master/docs/rules/no_href_and_src_inline_xss.md) | Disallows unescaped variables of uncertain <br/> origin from href and src attributes, due to the <br/>concern that they might originate from user input. | ✒️ |
+| [weblint-security/no-href-and-src-inline-xss-react](https://github.com/MarkKragerup/weblint-eslint-security/blob/master/docs/rules/no_href_and_src_inline_xss_react.md) | Disallows unescaped variables of uncertain <br/> origin from href and src JSX attributes, due to the <br/>concern that they might originate from user input. | ✒️ |
 
 ## ❤️ Contributions
 We welcome contributions!
