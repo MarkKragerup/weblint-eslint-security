@@ -75,8 +75,8 @@ For **React** projects, include the **React specific** rules and config:
 
 | **Rule ID** | **Description** |    |
 |:--------|:------------|:--:|
-| [detect-missing-helmet](https://github.com/MarkKragerup/weblint-eslint-security/blob/master/docs/rules/detect-missing-helmet) | Disallow use of ExpressJS applications without <br/>the use of Helmet.js defaults, due to the concern that </br>the HTTP headers might be insecurely configured. | ✒️ |
 | [detect-sql-injection](https://github.com/MarkKragerup/weblint-eslint-security/blob/master/docs/rules/detect-sql-injection.md) | Detect the usage of SQL queries that might be </br>vulnerable to SQL Injections. | ✒️ |
+| [detect-missing-helmet](https://github.com/MarkKragerup/weblint-eslint-security/blob/master/docs/rules/detect-missing-helmet) | Disallow use of ExpressJS applications without <br/>the use of Helmet.js defaults, due to the concern that </br>the HTTP headers might be insecurely configured. | ✒️ |
 
 ## ❤️ Contributions
 We welcome contributions!
