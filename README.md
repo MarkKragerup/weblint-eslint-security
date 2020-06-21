@@ -16,7 +16,7 @@ $ npm install --save-dev eslint eslint-plugin-weblint-security
 - Requires ES-Parser `>=2020`
 
 ## 🔧 Setup & Usage
-Include Weblint security plugin in your **.eslintrc.json** configuration file:
+Include Weblint security plugin in your **.eslintrc.json** configuration file ("env" required*):
 ```
 {
     "env": {
