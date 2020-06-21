@@ -1,19 +1,19 @@
-var mysql = require('mysql');
+const mysql = require('mysql');
 
-var dbConnection = mysql.createConnection({
+const dbConnection = mysql.createConnection({
   host: "localhost",
   user: "admin",
   password: "password",
   database: "my_db"
 });
 
-// variable with hard coded input
-const phone = '11 22 33 44';
+// Variable with hard coded input
+const phone = 11223344;
 
 const sql = 'SELECT * FROM users WHERE tlf = ' + phone;
 
-// connect to the database
+// Connect to the database
 dbConnection.connect();
 
-// execute query
+// Execute query
 dbConnection.query(sql, (err, result) => console.log(result));
