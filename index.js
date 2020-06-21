@@ -2,7 +2,8 @@
 
 module.exports = {
     rules: {
-        "no-href-and-src-inline-xss": require('./lib/rules/no_href_and_src_inline_xss.js'),
+        "no-href-and-src-inline-xss": require('./lib/rules/standard/no_href_and_src_inline_xss.js'),
+        "no-href-and-src-inline-xss-react": require('./lib/rules/react/no_href_and_src_inline_xss_react.js'),
     },
     configs: {
         recommended: {
