@@ -89,9 +89,9 @@ Please make sure any contributions are covered within the tests, or that new tes
 
 To run the tests, use: `npm test`
 
-Test coverage is achieved through the set of test files, located at: `/tests/test-files/<relevant rule-name>/`
+Test coverage is achieved through the set of **test files**, located at: <br/>`/tests/test-files/<relevant rule-name>/`
 
-All test files are prefixed with one of the following:
+**All test files are prefixed** with one of the following:
 
 - `valid_` for files that should give no output. Useful for testing false positives and soundness.
 

@@ -29,7 +29,7 @@ ruleTester.run('detect_sql_injection', rule, {
             code: fs.readFileSync('tests/test-files/detect_sql_injection/valid_safe_variables_template_string.js', 'utf8'),
         },
         {
-            code: fs.readFileSync('tests/test-files/detect_sql_injection/valid_safe_parameterized_statemen.js', 'utf8'),
+            code: fs.readFileSync('tests/test-files/detect_sql_injection/valid_safe_parameterized_statement.js', 'utf8'),
         },
     ],
 
