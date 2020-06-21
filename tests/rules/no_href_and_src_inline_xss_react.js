@@ -12,10 +12,10 @@ const fs = require('fs');
 
 const parser = require('../parser').BABEL_ESLINT;
 
-console.log(parser);
-
 const ruleTester = new RuleTester({
     parser: parser,
+    parserOptions: { ecmaVersion: 2020 },
+    env: { es6: true }
 });
 
 ruleTester.run('no_href_and_src_inline_xss-react', rule, {
