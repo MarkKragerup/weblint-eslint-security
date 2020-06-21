@@ -13,6 +13,7 @@ $ npm install --save-dev eslint eslint-plugin-weblint-security
 
 - Requires Node.js `>=14.4.0`
 - Requires ESLint `>=7.2.0`
+- Requires ES-Parser `>=2020`
 
 ## 🔧 Setup & Usage
 Include Weblint security plugin in your **.eslintrc.json** configuration file:
