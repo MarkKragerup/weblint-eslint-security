@@ -39,8 +39,7 @@ Include Weblint security plugin in your **.eslintrc.json** configuration file:
 
 | Rule ID | Description |    |
 |:--------|:------------|:--:|
-| [node/no-href-and-src-inline-xss](https://github.com/MarkKragerup/weblint-eslint-security/blob/master/docs/rules/no_href_and_src_inline_xss.md) | 
-Disallows unescaped variables of uncertain <br/> origin from href and src attributes, due to the concern <br/>that they might originate from user input. | ✒️ |
+| [node/no-href-and-src-inline-xss](https://github.com/MarkKragerup/weblint-eslint-security/blob/master/docs/rules/no_href_and_src_inline_xss.md) | Disallows unescaped variables of uncertain <br/> origin from href and src attributes, due to the concern <br/>that they might originate from user input. | ✒️ |
 
 ## ❤️ Contributions
 We welcome contributions!
