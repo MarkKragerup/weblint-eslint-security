@@ -82,12 +82,12 @@ ruleTester.run('no_href_and_src_inline_xss', rule, {
         {
             code: fs.readFileSync('tests/test-files/no_href_and_src_inline_xss/href/invalid_href_safe_concat_w_unsafe_binary.js', 'utf8'),
             errors: [{message: "href property value might be XSS vulnerable"}],
-            output: fs.readFileSync('tests/test-files/no_href_and_src_inline_xss/href/fixed_href_safe_concat_w_unsafe_binary.js')
+            output: fs.readFileSync('tests/test-files/no_href_and_src_inline_xss/href/fixed_href_safe_concat_w_unsafe_binary.js', 'utf8')
         },
         {
             code: fs.readFileSync('tests/test-files/no_href_and_src_inline_xss/href/invalid_href_template_string_w_user_input.js', 'utf8'),
             errors: [{message: "href property value might be XSS vulnerable"}],
-            output: fs.readFileSync('tests/test-files/no_href_and_src_inline_xss/href/fixed_href_template_string_w_user_input.js')
+            output: fs.readFileSync('tests/test-files/no_href_and_src_inline_xss/href/fixed_href_template_string_w_user_input.js', 'utf8')
         },
         {
             code: fs.readFileSync('tests/test-files/no_href_and_src_inline_xss/href/invalid_href_var_is_user_input.js', 'utf8'),
