@@ -20,29 +20,27 @@ ruleTester.run('detect_sql_injection', rule, {
 
     valid: [
         {
-            code: fs.readFileSync('tests/test-files/detect_sql_injection/valid_explicit_string.js', 'utf8')
+            code: fs.readFileSync('tests/test-files/detect_sql_injection/valid_explicit_string.js', 'utf8'),
         },
         {
-            code: fs.readFileSync('tests/test-files/detect_sql_injection/valid_safe_variables.js', 'utf8')
+            code: fs.readFileSync('tests/test-files/detect_sql_injection/valid_safe_variables.js', 'utf8'),
         },
         {
-            code: fs.readFileSync('tests/test-files/detect_sql_injection/valid_safe_variables_template_string.js', 'utf8')
+            code: fs.readFileSync('tests/test-files/detect_sql_injection/valid_safe_variables_template_string.js', 'utf8'),
         },
         {
-            code: fs.readFileSync('tests/test-files/detect_sql_injection/valid_safe_parameterized_statemen.js', 'utf8')
-        }
+            code: fs.readFileSync('tests/test-files/detect_sql_injection/valid_safe_parameterized_statemen.js', 'utf8'),
+        },
     ],
 
     invalid: [
         {
             code: fs.readFileSync('tests/test-files/detect_sql_injection/invalid_unsafe_template_string.js', 'utf8'),
-            errors: [{message: "Use the Helmet.js module for enhanced security on HTTP response headers in your Express application. \
-                                  Also consider using the expectCt flag: https://helmetjs.github.io/docs/expect-ct/"}]
+            errors: [{message: 'Parameterize the input for the query, to avoid SQL Injection vulnerabilities. See more at: https://www.npmjs.com/package/mysql#escaping-query-values.'}],
         },
         {
             code: fs.readFileSync('tests/test-files/detect_sql_injection/invalid_unsafe_user_input.js', 'utf8'),
-            errors: [{message: "Use the Helmet.js module for enhanced security on HTTP response headers in your Express application. \
-                                  Also consider using the expectCt flag: https://helmetjs.github.io/docs/expect-ct/"}]
-        }
-    ]
+            errors: [{message: 'Parameterize the input for the query, to avoid SQL Injection vulnerabilities. See more at: https://www.npmjs.com/package/mysql#escaping-query-values.'}],
+        },
+    ],
 });
