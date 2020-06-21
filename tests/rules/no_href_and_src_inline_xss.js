@@ -55,9 +55,9 @@ ruleTester.run('no_href_and_src_inline_xss', rule, {
         },
     ],
 
-    // the fixer function is automatically tested, because an output file is given
+    // The fixer function is automatically tested, by match with the specified output file
     invalid: [
-        //invalid src
+        //invalid src attributes
         {
             code: fs.readFileSync('tests/test-files/no_href_and_src_inline_xss/no_src_tests/invalid_src_safe_concat_w_unsafe_binary.js', 'utf8'),
             errors: [{message: "src property value might be XSS vulnerable"}],
@@ -78,7 +78,7 @@ ruleTester.run('no_href_and_src_inline_xss', rule, {
             errors: [{message: "src property value might be XSS vulnerable"}],
             output: fs.readFileSync('tests/test-files/no_href_and_src_inline_xss/no_src_tests/fixed_src_var_unsafe_reassign.js', 'utf8')
         },
-        //invalid hrefn
+        //invalid href attributes
         {
             code: fs.readFileSync('tests/test-files/no_href_and_src_inline_xss/no_href_tests/invalid_href_safe_concat_w_unsafe_binary.js', 'utf8'),
             errors: [{message: "href property value might be XSS vulnerable"}],
