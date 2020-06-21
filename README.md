@@ -33,6 +33,7 @@ Include Weblint security plugin in your **.eslintrc.json** configuration file ("
 }
 ```
 
+### React support
 For **React** projects, include the **React specific** rules and config:
 ````
 {
@@ -58,10 +59,18 @@ For **React** projects, include the **React specific** rules and config:
 ## 📖 Rules
 ✒️ - the mark of fixable rules. Use `eslint --fix .` to apply all available fixes to your project.
 
-| **Rule ID** (weblint-security/\<rule-id>) | **Description** |    |
+### Recommended base rules (@/recommended)
+
+| **Rule ID** | **Description** |    |
 |:--------|:------------|:--:|
 | [no-href-and-src-inline-xss](https://github.com/MarkKragerup/weblint-eslint-security/blob/master/docs/rules/no_href_and_src_inline_xss.md) | Disallows unescaped variables of uncertain <br/> origin from href and src attributes, due to the <br/>concern that they might originate from user input. | ✒️ |
+
+### React specific rules (@/react)
+
+| **Rule ID** | **Description** |    |
+|:--------|:------------|:--:|
 | [no-href-and-src-inline-xss-react](https://github.com/MarkKragerup/weblint-eslint-security/blob/master/docs/rules/no_href_and_src_inline_xss_react.md) | Disallows unescaped variables of uncertain <br/> origin from href and src JSX attributes, due to the <br/>concern that they might originate from user input. | ✒️ |
+
 
 ## ❤️ Contributions
 We welcome contributions!
