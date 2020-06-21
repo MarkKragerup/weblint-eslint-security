@@ -1,8 +1,8 @@
 {
   "name": "eslint-plugin-weblint-security",
   "homepage": "https://github.com/MarkKragerup/weblint-eslint-security",
-  "version": "1.1.4",
-  "description": "ESLint rules for enhanced security",
+  "version": "1.1.5",
+  "description": "ESLint rules for enhanced security - even for React and Node.js!",
   "main": "index.js",
   "scripts": {
     "test": "npm run unit-test",
@@ -11,14 +11,17 @@
   "keywords": [
     "ESLint",
     "Security",
+    "React",
+    "Node.js",
+    "Express",
     "Weblint"
   ],
   "author": "Mark Kragerup & Mathias Høyrup Nielsen",
   "license": "MIT",
   "dependencies": {
     "babel-eslint": "^10.1.0",
-    "eslint": "^7.2.0",
-    "eslint-utils": "^2.0.0",
-    "mocha": "^8.0.0"
+    "eslint": "^7.3.0",
+    "eslint-utils": "^2.1.0",
+    "mocha": "^8.0.1"
   }
 }
