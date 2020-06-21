@@ -34,7 +34,7 @@ Include Weblint security plugin in your **.eslintrc.json** configuration file ("
 ```
 
 ### React support
-For **React** projects, include the **React specific** rules and config:
+For **React** projects, include the **React specific** rules and configurations:
 ````
 {
     "env": {
@@ -55,6 +55,25 @@ For **React** projects, include the **React specific** rules and config:
     ]
 }
 ````
+
+### Node.js support (including Express.js security aspects)
+For **Node.js** projects, include the **Node.js specific** rules and configurations:
+```
+{
+    "env": {
+        "node": true
+    },
+    "parser": "babel-eslint",
+    "plugins": [
+        "weblint-security"
+    ],
+    "extends": [
+        "eslint:recommended",
+        "plugin:weblint-security/recommended",
+        "plugin:weblint-security/nodejs"
+    ]
+}
+```
 
 ## 📖 Rules
 ✒️ - the mark of fixable rules. Use `eslint --fix .` to apply all available fixes to your project.
