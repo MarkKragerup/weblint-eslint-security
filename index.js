@@ -13,6 +13,14 @@ module.exports = {
             rules: {
                 'weblint-security/no-href-and-src-inline-xss': 1,
             }
+        },
+        react: {
+            plugins: [
+                'weblint-security'
+            ],
+            rules: {
+                'weblint-security/no-href-and-src-inline-xss-react': 1,
+            }
         }
     }
 }
