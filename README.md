@@ -71,6 +71,12 @@ For **React** projects, include the **React specific** rules and config:
 |:--------|:------------|:--:|
 | [no-href-and-src-inline-xss-react](https://github.com/MarkKragerup/weblint-eslint-security/blob/master/docs/rules/no_href_and_src_inline_xss_react.md) | Disallows unescaped variables of uncertain <br/> origin from href and src JSX attributes, due to the <br/>concern that they might originate from user input. | ✒️ |
 
+### Node.js specific rules (@/nodejs)
+
+| **Rule ID** | **Description** |    |
+|:--------|:------------|:--:|
+| [detect-missing-helmet](https://github.com/MarkKragerup/weblint-eslint-security/blob/master/docs/rules/detect-missing-helmet) | Disallow use of ExpressJS applications without <br/>the use of Helmet.js defaults, due to the concern that </br>the HTTP headers might be insecurely configured. | ✒️ |
+| [detect-sql-injection](https://github.com/MarkKragerup/weblint-eslint-security/blob/master/docs/rules/detect-sql-injection.md) | Detect the usage of SQL queries that might be </br>vulnerable to SQL Injections. | ✒️ |
 
 ## ❤️ Contributions
 We welcome contributions!
