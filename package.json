@@ -1,7 +1,7 @@
 {
   "name": "eslint-plugin-weblint-security",
   "homepage": "https://github.com/MarkKragerup/weblint-eslint-security",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "ESLint rules for enhanced security",
   "main": "index.js",
   "scripts": {
