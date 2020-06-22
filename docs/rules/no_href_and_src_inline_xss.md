@@ -1,7 +1,7 @@
 # Disallows unescaped variables of uncertain origin from href and src values, due to the concern that they might originate from user input.
 
 ## Rule details
-There following test files serves as a demonstration of all the different situations the rule is considering.
+The following test files serves as a demonstration of all the different situations the rule is considering.
 <br/><br/>
 The following patterns are considered warnings:
 <br/><br/>
