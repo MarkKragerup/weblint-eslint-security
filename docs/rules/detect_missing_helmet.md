@@ -1,7 +1,11 @@
 # Disallow use of ExpressJS applications without the use of Helmet.js defaults, due to the concern that the HTTP headers might be insecurely configured
 
 ## Rule details
-The following patterns are considered warnings:
+There following test files serves as a demonstration of all the different situations the rule is considering.
+<br/><br/>
+**The following patterns are considered warnings**:
+<br/><br/>
+Helmet is imported but never used.
 ```javascript
 const myOddlyNamedApp = require("express");
 const myHelmetImport = require('helmet');
@@ -10,6 +14,7 @@ const myHelmetImport = require('helmet');
 myOddlyNamedApp.listen(8080);
 ```
 
+Helmet uses expectCT, but not the default configurations.
 ```javascript
 const app = require("express");
 const helmet = require("helmet");
@@ -20,6 +25,7 @@ app.use(helmet.expectCt({maxAge: 3600, enforce: true}));
 app.listen(8080);
 ```
 
+Helmet is not used.
 ```javascript
 const app = require("express");
 
@@ -29,6 +35,7 @@ app.listen(8080);
 ```
 
 The following patterns are NOT considered warnings:
+Helmet is imported and used correctly, with the use of the default configurations.
 ```javascript
 const app = require("express")
 const helmet = require('helmet')
