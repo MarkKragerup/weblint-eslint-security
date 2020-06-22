@@ -2,7 +2,8 @@
 
 ## Rule details
 The following patterns are considered warnings:
-
+<br/><br/>
+Variable with unsafe origin.
 ```javascript
     const userInput = prompt("What input do you like?");
     
