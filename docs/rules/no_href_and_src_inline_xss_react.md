@@ -1,7 +1,11 @@
 # Disallows unescaped variables of uncertain origin from href and src values, due to the concern that they might originate from user input.
 
 ## Rule details
-The following patterns are considered warnings:
+There following test files serves as a demonstration of all the different situations the rule is considering.
+<br/><br/>
+**The following patterns are considered warnings**:
+<br/><br/>
+The safe state is reassigned to unsafe user input. The state is used as the link of the a tag.
 ```javascript
   import React, {useState, useEffect} from 'react';
 
@@ -28,6 +32,7 @@ The following patterns are considered warnings:
   }
 ```
 
+The safe state is reassigned to unsafe user input. The state is used as the src of the iframe tag.
 ```javascript
   import React, {useState, useEffect} from 'react';
 
@@ -54,6 +59,7 @@ The following patterns are considered warnings:
   }
 ```
 
+The state has the value of null before being reassigned to unsafe user input. The state is used as the link of the a tag.
 ```javascript
   import React, {useState, useEffect} from 'react';
 
@@ -80,6 +86,7 @@ The following patterns are considered warnings:
   }
 ```
 
+The state has the value of null before being reassigned to unsafe user input. The state is used as the src of the iframe tag.
 ```javascript
   import React, {useState, useEffect} from 'react';
 
@@ -106,6 +113,7 @@ The following patterns are considered warnings:
   }
 ```
 
+The state has the value of null before being reassigned to unsafe user input, but immidiately after is reassigned to a safe string. The state is used as the link of the a tag.
 ```javascript
   import React, {useState, useEffect} from 'react';
 
@@ -135,6 +143,7 @@ The following patterns are considered warnings:
   }
 ```
 
+The state has the value of null before being reassigned to unsafe user input, but immidiately after is reassigned to a safe string. The state is used as the src of the iframe tag.
 ```javascript
   import React, {useState, useEffect} from 'react';
 
@@ -164,6 +173,7 @@ The following patterns are considered warnings:
   }
 ```
 
+The safe state is reassigned to unsafe user input. The state is used in a template string in the link of the a tag. 
 ```javascript
   import React, {useState, useEffect} from 'react';
 
@@ -192,6 +202,7 @@ The following patterns are considered warnings:
   }
 ```
 
+The safe state is reassigned to unsafe user input. The state is used in a template string in the src of the iframe tag. 
 ```javascript
   import React, {useState, useEffect} from 'react';
 
@@ -220,6 +231,7 @@ The following patterns are considered warnings:
   }
 ```
 
+The safe state with the value of null is reassigned to unsafe user input, but immidiately after contatenated with a string. The state is used as the link of the a tag.
 ```javascript
   import React, {useState, useEffect} from 'react';
 
@@ -246,6 +258,7 @@ The following patterns are considered warnings:
   }
 ```
 
+The safe state with the value of null is reassigned to unsafe user input, but immidiately after contatenated with a string. The state is used as the src of the iframe tag.
 ```javascript
   import React, {useState, useEffect} from 'react';
 
@@ -273,13 +286,12 @@ The following patterns are considered warnings:
 ```
 
 The following patterns are NOT considered warnings:
+The safe state with the value of null is reassigned to a safe string concatenation. The state is used in the link of the a tag. 
 ```javascript
   import React, {useState, useEffect} from 'react';
 
   // Functional ReactJS component
   export default function SafeValuesInBinary(){
-
-      // Example script input: javascript:alert('Hacked!');
 
       // Initialise the state and setter, to an explicit string
       const [destination, setDestination] = useState(null);
@@ -301,6 +313,7 @@ The following patterns are NOT considered warnings:
   }
 ```
 
+The safe state with the value of null is reassigned to a safe string concatenation. The state is used in the src of the iframe tag. 
 ```javascript
   import React, {useState, useEffect} from 'react';
 
@@ -329,6 +342,7 @@ The following patterns are NOT considered warnings:
   }
 ```
 
+The safe state is used in combination with the safe variable in a template string, in the link of the a tag.
 ```javascript
   import React, {useState, } from 'react';
 
@@ -348,6 +362,7 @@ The following patterns are NOT considered warnings:
   }
 ```
 
+The safe state is used in combination with the safe variable in a template string, in the src of the iframe tag.
 ```javascript
   import React, {useState, } from 'react';
 
@@ -367,6 +382,7 @@ The following patterns are NOT considered warnings:
   }
 ```
 
+The safe state with the value of null is reassigned to the unsafe user input but immidiately reassigned to a safe string. The state is used in the link of the a tag.
 ```javascript
   import React, {useState, useEffect} from 'react';
 
@@ -398,6 +414,7 @@ The following patterns are NOT considered warnings:
   }
 ```
 
+The safe state with the value of null is reassigned to the unsafe user input but immidiately reassigned to a safe string. The state is used in the src of the iframe tag.
 ```javascript
   import React, {useState, useEffect} from 'react';
 
@@ -429,6 +446,7 @@ The following patterns are NOT considered warnings:
   }
 ```
 
+The safe state with the value of null is reassigned to unsafe user input. The state is used as the link of the a tag and properly escaped.
 ```javascript
   import React, {useState, useEffect} from 'react';
 
@@ -457,6 +475,7 @@ The following patterns are NOT considered warnings:
   }
 ```
 
+The safe state with the value of null is reassigned to unsafe user input. The state is used as the src of the iframe tag and properly escaped.
 ```javascript
   import React, {useState, useEffect} from 'react';
 
