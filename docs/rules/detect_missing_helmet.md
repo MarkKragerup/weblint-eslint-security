@@ -46,6 +46,7 @@ app.use(helmet())
 app.listen(8080)
 ```
 
+Helmet is imported and used correctly, with the use of the default configurations. This test shows the user can call the variables whatever they would like.
 ```javascript
 const app = require("express")
 const myHelmet = require('helmet')
