@@ -3,7 +3,7 @@
 ## Rule details
 The following test files serves as a demonstration of all the different situations the rule is considering.
 <br/><br/>
-The following patterns are considered warnings:
+**The following patterns are considered warnings**:
 <br/><br/>
 Variable with unsafe user input.
 ```javascript
@@ -128,7 +128,7 @@ Variable containing unsafe user input is used in a template string.
     document.body.appendChild(iframe);
 ```
 
-The following patterns are NOT considered warnings:
+**The following patterns are NOT considered warnings**:
 <br/><br/>
 Safe string concatenation.
 ```javascript
