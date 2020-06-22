@@ -1,7 +1,11 @@
 # Detects possible SQL injection vulnerabilities originating from unsafe user input.
 
 ## Rule details
-The following patterns are considered warnings:
+There following test files serves as a demonstration of all the different situations the rule is considering.
+<br/><br/>
+**The following patterns are considered warnings**:
+<br/><br/>
+Variable with unsafe user input is used in a template string.
 ```javascript
 var mysql = require('mysql');
 
@@ -26,6 +30,7 @@ con.connect(function(err) {
 });
 ```
 
+Variable with unsafe user input is used in a string concatenation.
 ```javascript
 var mysql = require('mysql');
 
@@ -50,7 +55,8 @@ con.connect(function(err) {
 });
 ```
 
-The following patterns are NOT considered warnings:
+**The following patterns are NOT considered warnings**:
+Safe query - hardcoded string.
 ```javascript
 var mysql = require('mysql');
 
@@ -70,6 +76,7 @@ con.connect(function(err) {
 });
 ```
 
+Safe variable is used in string concatenation.
 ```javascript
 var mysql = require('mysql');
 
@@ -92,6 +99,7 @@ con.connect(function(err) {
 });
 ```
 
+Safe variable is used in template string.
 ```javascript
 var mysql = require('mysql');
 
