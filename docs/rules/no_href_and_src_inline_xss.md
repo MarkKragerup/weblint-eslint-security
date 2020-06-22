@@ -3,7 +3,7 @@
 ## Rule details
 The following patterns are considered warnings:
 <br/><br/>
-Variable with unsafe origin.
+Variable with unsafe user input.
 ```javascript
     const userInput = prompt("What input do you like?");
     
@@ -17,6 +17,8 @@ Variable with unsafe origin.
     
     document.body.appendChild(a);
 ```
+
+Variable with unsafe user input.
 ```javascript
     const userInput = prompt("What input do you like?");
     
@@ -28,6 +30,8 @@ Variable with unsafe origin.
     
     document.body.appendChild(iframe);
 ```
+
+Safe variable gets reassigned to unsafe user input.
 ```javascript
     // Declare safe variable
     let googleLink = "google.com";
@@ -45,6 +49,8 @@ Variable with unsafe origin.
 
     document.body.appendChild(a);
 ```
+
+Safe variable gets reassigned to unsafe user input.
 ```javascript
     // Declare safe variable
     let googleLink = "google.com";
@@ -60,6 +66,8 @@ Variable with unsafe origin.
 
     document.body.appendChild(iframe);
 ```
+
+Safe string concatenation is concatenated with unsafe user input.
 ```javascript
     let googleLink = "google.com" + "/contact"
     const userInput = prompt("What input do you like?");
@@ -74,6 +82,8 @@ Variable with unsafe origin.
     
     document.body.appendChild(a);
 ```
+
+Safe string concatenation is concatenated with unsafe user input.
 ```javascript
     // Declare variable, initialised as a safe concatenation of two explicit strings
     let googleLink = "google.com" + "/contact"
@@ -87,6 +97,8 @@ Variable with unsafe origin.
     
     document.body.appendChild(iframe);
 ```
+
+Variable with unsafe user input is used in a template string.
 ```javascript
     const userInput = prompt("What input do you like?");
     
@@ -100,6 +112,8 @@ Variable with unsafe origin.
     
     document.body.appendChild(a);
 ```
+
+Variable with unsafe user input is used in a template string.
 ```javascript
     const userInput = prompt("What input do you like?");
     
@@ -113,6 +127,8 @@ Variable with unsafe origin.
 ```
 
 The following patterns are NOT considered warnings:
+<br/><br/>
+Safe string concatenation.
 ```javascript
     // Declare variable, initialised as a safe concatenation of two explicit strings
     let googleLink3 = "google.com" + "/contact";
@@ -127,6 +143,8 @@ The following patterns are NOT considered warnings:
 
     document.body.appendChild(a);
 ```
+
+Safe string concatenation.
 ```javascript
     // Declare variable, initialised as a safe concatenation of two explicit strings
     let googleLink3 = "google.com" + "/contact";
@@ -139,6 +157,8 @@ The following patterns are NOT considered warnings:
 
     document.body.appendChild(iframe);
 ```
+
+Safe variable is reassigned to unsafe user input, but reassigned again to safe string.
 ```javascript
     // Declare and initialise variable as explicit string
     let googleLink = "google.com";
@@ -159,6 +179,8 @@ The following patterns are NOT considered warnings:
 
     document.body.appendChild(a);
 ```
+
+Safe variable is reassigned to unsafe user input, but reassigned again to safe string.
 ```javascript
     // Declare and initialise variable as explicit string
     let googleLink = "google.com";
@@ -178,7 +200,8 @@ The following patterns are NOT considered warnings:
     document.body.appendChild(iframe);
 ```
 
-```
+Safe variable.
+```javascript
     // Declare and initialise variable as explicit string
     let googleLink = "google.dk";
 
@@ -192,6 +215,8 @@ The following patterns are NOT considered warnings:
 
     document.body.appendChild(a);
 ```
+
+Safe variable.
 ```javascript
     // Declare and initialise variable as explicit string
     let googleLink = "google.dk";
@@ -204,6 +229,8 @@ The following patterns are NOT considered warnings:
 
     document.body.appendChild(iframe);
 ```
+
+Safe variable is used in a template string.
 ```javascript
     const myLink = "google.com";
 
@@ -217,6 +244,8 @@ The following patterns are NOT considered warnings:
 
     document.body.appendChild(a);
 ```
+
+Safe variable is used in a template string.
 ```javascript
     const myLink = "google.com";
 
