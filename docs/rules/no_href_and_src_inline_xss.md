@@ -98,7 +98,7 @@ Safe string concatenation is concatenated with unsafe user input.
     document.body.appendChild(iframe);
 ```
 
-Variable with unsafe user input is used in a template string.
+Variable containing unsafe user input is used in a template string.
 ```javascript
     const userInput = prompt("What input do you like?");
     
@@ -113,7 +113,7 @@ Variable with unsafe user input is used in a template string.
     document.body.appendChild(a);
 ```
 
-Variable with unsafe user input is used in a template string.
+Variable containing unsafe user input is used in a template string.
 ```javascript
     const userInput = prompt("What input do you like?");
     
@@ -257,6 +257,8 @@ Safe variable is used in a template string.
 
     document.body.appendChild(iframe);
 ```
+
+Variable containing unsafe user input is being escaped.
 ```javascript
     let userInput = prompt("What input do you like?");
 
@@ -270,6 +272,8 @@ Safe variable is used in a template string.
 
     document.body.appendChild(a);
 ```
+
+Variable containing unsafe user input is being escaped.
 ```javascript
     let userInput = prompt("What input do you like?");
 
