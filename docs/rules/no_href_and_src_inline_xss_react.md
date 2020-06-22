@@ -285,7 +285,8 @@ The safe state with the value of null is reassigned to unsafe user input, but im
   }
 ```
 
-The following patterns are NOT considered warnings:
+**The following patterns are NOT considered warnings**:
+<br/><br/>
 The safe state with the value of null is reassigned to a safe string concatenation. The state is used in the link of the a tag. 
 ```javascript
   import React, {useState, useEffect} from 'react';
