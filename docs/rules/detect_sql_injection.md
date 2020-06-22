@@ -56,6 +56,7 @@ con.connect(function(err) {
 ```
 
 **The following patterns are NOT considered warnings**:
+<br/><br/>
 Safe query - hardcoded string.
 ```javascript
 var mysql = require('mysql');
