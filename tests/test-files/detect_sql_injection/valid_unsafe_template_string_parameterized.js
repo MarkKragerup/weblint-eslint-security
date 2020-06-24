@@ -8,7 +8,7 @@ const dbConnection = mysql.createConnection({
   password: "password",
   database: "my_db"
 });
-
+  
 // Some user input - SQL injection input example: 42 OR 1=1
 let phone = readline.question("What is your phone number?\n");
 
