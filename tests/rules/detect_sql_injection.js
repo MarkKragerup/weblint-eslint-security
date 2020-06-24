@@ -31,6 +31,12 @@ ruleTester.run('detect_sql_injection', rule, {
         {
             code: fs.readFileSync('tests/test-files/detect_sql_injection/valid_safe_parameterized_statement.js', 'utf8'),
         },
+        {
+            code: fs.readFileSync('tests/test-files/detect_sql_injection/valid_unsafe_user_input_parameterized.js', 'utf8'),
+        },
+        {
+            code: fs.readFileSync('tests/test-files/detect_sql_injection/valid_unsafe_template_string_parameterized.js', 'utf8'),
+        },
     ],
 
     invalid: [
