@@ -15,16 +15,10 @@ const ts_rule: Rule.RuleModule = {
     create: function (context) {
         return {
             VariableDeclaration: node => {
-                return context.report({node, message: `${context.getFilename()} property value might be XSS vulnerable`});
+                console.log(context.getScope().references[0].resolved?.references);
+                context.report({ node, message: node.declarations[0].id.toString() });
             }
         }
     },
 };
 export default ts_rule;
-
-/*
-suggestion: `Avoid using unescaped variables of uncertain origin in href and src property values,
-                                   due to the concern that they might originate from user input.
-                                   Alternatively (this does not guarantee safety), escape the input, by applying the following call to the value:
-                                   " .toLowerCase().replace('javascript:', '/javascript/:/'); "`,
- */
