@@ -45,17 +45,17 @@ ruleTester.run('detect_missing_helmet', rule, {
             output: fs.readFileSync('tests/test-files/detect_missing_helmet/fixed_helmet_only_import_no_apply.js', 'utf8')
         },
         {
-            code: fs.readFileSync('tests/test-files/detect_missing_helmet/invalid_no_helmet_but_expectCT.js', 'utf8'),
+            code: fs.readFileSync('tests/test-files/detect_missing_helmet/invalid_no_helmet_but_expectCt.js', 'utf8'),
             errors: [{message: "Use the Helmet.js module for enhanced security on HTTP response headers in your Express application. \
                                   Also consider using the expectCt flag: https://helmetjs.github.io/docs/expect-ct/"}],
-            output: fs.readFileSync('tests/test-files/detect_missing_helmet/fixed_no_helmet_but_expectCT.js', 'utf8')
+            output: fs.readFileSync('tests/test-files/detect_missing_helmet/fixed_no_helmet_but_expectCt.js', 'utf8')
 
         },
         {
-            code: fs.readFileSync('tests/test-files/detect_missing_helmet/invalid_no_helmet_nor_expectCT.js', 'utf8'),
+            code: fs.readFileSync('tests/test-files/detect_missing_helmet/invalid_no_helmet_nor_expectCt.js', 'utf8'),
             errors: [{message: "Use the Helmet.js module for enhanced security on HTTP response headers in your Express application. \
                                   Also consider using the expectCt flag: https://helmetjs.github.io/docs/expect-ct/"}],
-            output: fs.readFileSync('tests/test-files/detect_missing_helmet/fixed_no_helmet_nor_expectCT.js', 'utf8'),
+            output: fs.readFileSync('tests/test-files/detect_missing_helmet/fixed_no_helmet_nor_expectCt.js', 'utf8'),
         },
     ]
 });
