@@ -8,7 +8,7 @@
     "test": "npm run build && npm run unit-test",
     "unit-test": "mocha tests/rules/*.js",
     "dist-test": "npm run build && mocha dist/tests/rules/*.js",
-    "ts-test": "env TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\" }' mocha -r ts-node/register 'tests/rules/*.ts'",
+    "ts-test": "mocha -r ts-node/register tests/rules/*.ts",
     "build": "tsc"
   },
   "keywords": [
@@ -25,7 +25,8 @@
     "babel-eslint": "^10.1.0",
     "eslint": "^7.3.0",
     "eslint-utils": "^2.1.0",
-    "mocha": "^8.0.1"
+    "mocha": "^8.0.1",
+    "eslint-plugin-weblint-security": "."
   },
   "devDependencies": {
     "@types/eslint": "^7.29.0",

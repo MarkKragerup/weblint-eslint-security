@@ -19,8 +19,8 @@ ruleTester.run('typescript rule test', ts_rule, {
 
     invalid: [
         {
-            code: fs.readFileSync('tests/test-files/ts_rule_test.js', 'utf8'),
-            errors: [{message: 'Always use let'}]
+            code: fs.readFileSync('tests/test-files/invalid_ts_rule_test.js', 'utf8'),
+            errors: [{message: 'The program contains a require call'}]
         },
     ],
 });

@@ -1,0 +1,4 @@
+{
+  "extends": ["plugin:weblint-security/recommended"],
+  "plugins": ["weblint-security"]
+}

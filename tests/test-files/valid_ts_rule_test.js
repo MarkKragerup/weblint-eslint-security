@@ -1,2 +1,2 @@
-var maddi = require('./context');
+var maddi = 'hejsa';
 console.log(maddi);
