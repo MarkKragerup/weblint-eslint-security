@@ -19,23 +19,23 @@ const ts_rule: Rule.RuleModule = {
                 // Get all source code scopes.
                 const scopes: Scope.Scope[] = context.getSourceCode().scopeManager.scopes;
 
-                // An array of scopes which contains a Map (a Set) from variable name to variable data.
+                // Access the set of variables for each scope.
                 const scopesVariableSet: Map<string, Scope.Variable>[] = scopes.map((e) => e.set);
 
-                // Filter on reference array being set.
+                // Filter out variables if reference array is not set.
                 const references: Map<string, Scope.Variable>[] = scopesVariableSet.map(scope => filterOnReferences(scope));
                 if (isAllScopesEmpty(references)) return;
 
                 // Access variable references.
                 const variableReferences: Map<string, Scope.Reference>[] = references.map(scope => getReferences(scope));
 
-                // Filter on the Reference Node having a writeExpr.
+                // Filter out Reference nodes if they do not contain a writeExpr.
                 const filteredWriteExpr: Map<string, Scope.Reference>[] = variableReferences.map((scope) => filterOnWriteExpr(scope));
 
                 // Access writeExpr.
                 const writeExpressions = filteredWriteExpr.map(scope => accessWriteExpr(scope));
 
-                // Filter on the writeExpr being a CallExpression and its callee name being require.
+                // Filter out variables where writeExpr is not a CallExpression and its callee name not being require.
                 const requireCalls = writeExpressions.map((scope) => isRequireCalls(scope));
                 if (isAllScopesEmpty(requireCalls)) return;
 
