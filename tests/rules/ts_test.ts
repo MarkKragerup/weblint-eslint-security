@@ -29,19 +29,19 @@ ruleTester.run('typescript rule test', ts_rule, {
     invalid: [
         {
             code: fs.readFileSync('tests/test-files/ts_rule/invalid_normal_require.js', 'utf8'),
-            errors: [{message: 'The program contains a require call'}]
+            errors: [{message: 'The program contains a require call'}, {message: 'The node contains a require call'}]
         },
         {
             code: fs.readFileSync('tests/test-files/ts_rule/invalid_require_in_function.js', 'utf8'),
-            errors: [{message: 'The program contains a require call'}]
+            errors: [{message: 'The program contains a require call'}, {message: 'The node contains a require call'}]
         },
         {
             code: fs.readFileSync('tests/test-files/ts_rule/invalid_class.js', 'utf8'),
-            errors: [{message: 'The program contains a require call'}]
+            errors: [{message: 'The node contains a require call'}]
         },
         {
             code: fs.readFileSync('tests/test-files/ts_rule/invalid_loop.js', 'utf8'),
-            errors: [{message: 'The program contains a require call'}, {message: 'The program contains a require call'}, {message: 'The program contains a require call'}]
+            errors: [{message: 'The node contains a require call'}]
         },
     ],
 });
