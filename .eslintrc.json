@@ -1,4 +1,5 @@
 {
-  "extends": ["plugin:weblint-security/recommended"],
-  "plugins": ["weblint-security"]
+  "env": {
+    "es6": true
+  }
 }
