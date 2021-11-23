@@ -8,6 +8,7 @@ import BABEL_ESLINT from '../parser';
 
 const ruleTester = new RuleTester({
     parser: BABEL_ESLINT,
+    env: { es6: true }
 });
 
 ruleTester.run('typescript rule test', ts_rule, {
