@@ -2,7 +2,6 @@
 import { Rule, Scope } from "eslint";
 import ESTree from 'estree';
 import RuleContext = Rule.RuleContext;
-import {type} from "os";
 
 const ts_rule: Rule.RuleModule = {
     meta: {
@@ -67,7 +66,7 @@ const scanFileForAllRequires = (context: RuleContext, node: ESTree.VariableDecla
     context.report({ node, message: 'The program contains a require call' });
 }
 
-const isCallExpression = (node: ESTree.CallExpression | ESTree.VariableDeclaration): boolean => {
+const isCallExpression = (node: ESTree.CallExpression | ESTree.VariableDeclaration): node is ESTree.CallExpression => {
     return (node as ESTree.CallExpression).callee !== undefined;
 }
 
@@ -76,23 +75,34 @@ const scanNodeForRequire = (context: RuleContext, node: ESTree.CallExpression | 
     let requirePath;
 
     if (isCallExpression(node)) {
-        const localNode = node as ESTree.CallExpression;
+        if ((node.callee as ESTree.Identifier).name !== 'require') return;
 
-        if ((localNode.callee as ESTree.Identifier).name !== 'require') return;
-
-        requirePath = (localNode.arguments[0] as ESTree.Literal).value ?? '';
+        requirePath = (node.arguments[0] as ESTree.Literal).value ?? '';
     } else {
-        const localNode = node as ESTree.VariableDeclaration;
+        // Follow the call
+        if (node.declarations[0].init?.type === "CallExpression") {
+            const call = node.declarations[0].init as ESTree.CallExpression;
 
-        if (localNode.declarations[0].init?.type !== "CallExpression") return;
+            if ((call.callee as ESTree.Identifier).name !== 'require') return;
 
-        const call = localNode.declarations[0].init as ESTree.CallExpression;
+            requirePath = (call.arguments[0] as ESTree.Literal).value ?? '';
+        }
+        // Follow potential TemplateLiteral variables
+        else if (node.declarations[0].init?.type === "TemplateLiteral") return;
 
-        if ((call.callee as ESTree.Identifier).name !== 'require') return;
-
-        requirePath = (call.arguments[0] as ESTree.Literal).value ?? '';
+        else return;
     }
 
     console.log(requirePath);
     context.report({ node, message: 'The node contains a require call' });
 }
+
+type IValidVariableNode = ESTree.VariableDeclaration | ESTree.CallExpression;
+
+const getNodeByVariableName = (identifier: ESTree.Identifier, context: RuleContext): Scope.Variable | undefined => {
+    const relevantScope = getScopeForNode(identifier, context);
+    return relevantScope?.set.get(identifier.name);
+    // return relevantScope?.variables.find(v => v.identifiers.find(i => i.name === identifier.name));
+}
+
+const getScopeForNode = (node: ESTree.Node, context: RuleContext): Scope.Scope | null => context.getSourceCode().scopeManager.acquire(node);
