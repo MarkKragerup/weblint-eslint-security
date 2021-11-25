@@ -1,1 +1,2 @@
-exports.default = 21;
+var a = 11;
+exports.default = a;

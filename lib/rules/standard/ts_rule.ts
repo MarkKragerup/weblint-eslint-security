@@ -1,5 +1,6 @@
 /** Insert Rule Description */
-import { Rule, Scope } from "eslint";
+import { readFileSync } from 'fs';
+import {Rule, Scope, Linter, SourceCode} from "eslint";
 import ESTree from 'estree';
 import RuleContext = Rule.RuleContext;
 
@@ -17,10 +18,23 @@ const ts_rule: Rule.RuleModule = {
     create: function (context) {
         return {
             VariableDeclaration: node => {
-                scanFileForAllRequires(context, node);
-            },
-            CallExpression: node => {
-                scanNodeForRequire(context, node);
+                if (node.declarations[0].init?.type !== "Literal") {
+
+                    const declarationValue = node.declarations[0].init;
+                    if (!declarationValue) return;
+
+                    const result  = traceValue(declarationValue, context, (node) => node.type === "Literal");
+
+                    if (result) {
+                        context.report({node, message: "Errormsg"});
+                    }
+                }
+
+                // The variable declaration value is a literal
+                else {
+                    return;
+                }
+
             }
         }
     },
@@ -106,3 +120,100 @@ const getNodeByVariableName = (identifier: ESTree.Identifier, context: RuleConte
 }
 
 const getScopeForNode = (node: ESTree.Node, context: RuleContext): Scope.Scope | null => context.getSourceCode().scopeManager.acquire(node);
+
+
+/**
+ * Thought 1: The callee of the function trace can provide a verify function with any subnode type.
+ * This presents a problem in which you need to know when to call verify. The type is not enough,
+ * as it could potentially be an unpacked object.
+ *
+ * Thought 2:
+ */
+const traceValue = (node: ESTree.Node, context: RuleContext, verify: (node: ESTree.Node) => boolean): boolean => {
+    // This is not correct - Figure out when to call verify
+    if (node.type === "Literal") return verify(node);
+
+    else if (node.type === "Identifier") {
+        getNodeByVariableName(node, context);
+    }
+
+    else if (node.type === "CallExpression") {
+        if (isRequireCall(node)) {
+            // Assumption that the file is .js
+            // Some path logic manipulation thingy has to be done
+            const fileContents = readFileSync("tests/test-files/ts_rule" + getRequirePath(node).replace(".", "") + '.js', 'utf-8');
+            console.log('contents of file', fileContents);
+
+            // Creating AST on the Linter class instance
+            const linter = new Linter();
+            linter.verify(fileContents, { rules: { semi: 2 } });
+
+            const sourceCode = linter.getSourceCode();
+            console.log('ast', linter.getSourceCode());
+
+            // The result of the require has an exports.default
+            if (sourceCode.lines.find(l => l.includes("exports.default"))) {
+                const exportDefaultNode = getExportDefaultNode(sourceCode);
+
+                // The code line export.defaults = 11 is an Identifier node when doing getExportDefaultNode(sourceCode).
+                // The 'exports' part of the line is the Identifier.
+                if (exportDefaultNode.type !== "Identifier") return false;
+                const memberExpression = (exportDefaultNode as ESTree.Identifier & { parent: ESTree.MemberExpression }).parent;
+                const assignmentExpression = (memberExpression as ESTree.MemberExpression & { parent: ESTree.AssignmentExpression }).parent;
+                const declarationValue = (assignmentExpression as ESTree.AssignmentExpression).right;
+
+                if (declarationValue.type !== "Identifier" && declarationValue.type !== 'Literal') return false;
+                if (declarationValue.type === "Literal") verify(declarationValue);
+                else if (declarationValue.type === "Identifier") return traceValue(declarationValue, context, verify); // Does this work?
+            } else { // The result is an object of values
+                // Check all values
+                return true;
+            }
+        }
+
+        // If the callee type is Identifier - it is a function
+        else if (node.callee.type === "Identifier") {
+            const functionName = node.callee.name;
+            const functionArgs = node.arguments;
+        }
+    }
+
+    else if (node.type === "ObjectExpression") {
+        // const a = { name: "Jens", age: 12 }
+        return true;
+    }
+
+    else if (node.type === "MemberExpression") {
+        // const a = require('./context).a;
+        if (isMemberExprRequireCall(node)) {
+            return true;
+        } else { // Array.from(new Map(["google", "https://google.com"]));
+            return true;
+        }
+    }
+
+    else if (node.type === "ArrayExpression") {
+        // const a = [1,2,3]
+        return true;
+    }
+
+    else if (node.type === "NewExpression") {
+        // const a = new - type of expression (classes, Map etc.)
+        return true;
+    }
+
+    return true;
+}
+
+const isRequireCall = (node: ESTree.CallExpression) => ((node.callee as ESTree.Identifier).name === 'require');
+
+const isMemberExprRequireCall = (node: ESTree.MemberExpression) => (((node.object as ESTree.CallExpression).callee as ESTree.Identifier).name === 'require');
+
+// You can only provide nodes that are require calls - the parameter of the require call and therefore return type of this function is string.
+const getRequirePath = (node: ESTree.CallExpression): string => (node.arguments[0] as ESTree.Literal).value as string;
+
+const getExportDefaultNode = (sourceCode: SourceCode): ESTree.Node => {
+    const lineIndex = sourceCode.lines.findIndex(l => l.includes("exports.default"));
+    const rangeIndex = (sourceCode as SourceCode & { lineStartIndices: number[] }).lineStartIndices[lineIndex];
+    return (sourceCode.getNodeByRangeIndex(rangeIndex) as ESTree.VariableDeclaration);
+}
