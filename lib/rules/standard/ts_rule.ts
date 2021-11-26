@@ -113,6 +113,18 @@ const scanNodeForRequire = (context: RuleContext, node: ESTree.CallExpression | 
 
 type IValidVariableNode = ESTree.VariableDeclaration | ESTree.CallExpression;
 
+// Assumption - identifier nodes does always get declared in the same file.
+const getDeclarationValueForIdentifier = (identifier: ESTree.Identifier, srcCode: SourceCode): ESTree.Expression | undefined => {
+    const scopeVariable = srcCode.scopeManager.scopes.find(s => s.set.has(identifier.name))?.set.get(identifier.name);
+    if (!scopeVariable) return undefined;
+
+    const variableDeclarator = (scopeVariable.identifiers[0] as ESTree.Identifier & { parent: ESTree.VariableDeclarator}).parent;
+    const declarationValue = variableDeclarator.init;
+
+    if (!declarationValue) return undefined;
+    else return declarationValue;
+}
+
 const getNodeByIdentifierNode = (identifier: ESTree.Identifier, srcCode: SourceCode): Scope.Variable | undefined => {
     const relevantScope = getScopeForNode(identifier, srcCode);
     return relevantScope?.set.get(identifier.name);
@@ -134,12 +146,7 @@ const traceValue = (node: ESTree.Node, context: RuleContext, verify: (node: ESTr
     if (node.type === "Literal") return verify(node);
 
     else if (node.type === "Identifier") {
-        const scopeVariable = context.getSourceCode().scopeManager.scopes.find(s => s.set.has(node.name))?.set.get(node.name);
-        if (!scopeVariable) return false;
-
-        const variableDeclarator = (scopeVariable.identifiers[0] as ESTree.Identifier & { parent: ESTree.VariableDeclarator}).parent;
-        const declarationValue = variableDeclarator.init;
-
+        const declarationValue = getDeclarationValueForIdentifier(node, context.getSourceCode());
         if (!declarationValue) return false;
         return traceValue(declarationValue, context, verify);
     }
@@ -169,7 +176,6 @@ const traceValue = (node: ESTree.Node, context: RuleContext, verify: (node: ESTr
                 return true;
             }
         }
-
         // If the callee type is Identifier - it is a function
         else if (node.callee.type === "Identifier") {
             const functionName = node.callee.name;
@@ -177,9 +183,20 @@ const traceValue = (node: ESTree.Node, context: RuleContext, verify: (node: ESTr
         }
     }
 
+    // const a = { url: 'https://google.com' }
     else if (node.type === "ObjectExpression") {
-        // const a = { name: "Jens", age: 12 }
-        return true;
+        const results = node.properties.map(p => {
+            if (p.type === "Property") return traceValue(p.value, context, verify);
+            else { // SpreadElement
+                const identifier = p.argument as ESTree.Identifier;
+
+                // Get value of identifier (it is an object)
+                const declarationValue = getDeclarationValueForIdentifier(identifier, context.getSourceCode());
+                if (!declarationValue) return false;
+                return traceValue(declarationValue, context, verify); // Call traceValue on the referenced object
+            }
+        })
+        return results.includes(false);
     }
 
     else if (node.type === "MemberExpression") {
@@ -191,13 +208,7 @@ const traceValue = (node: ESTree.Node, context: RuleContext, verify: (node: ESTr
             const callExprNode = node.object as ESTree.CallExpression;
             const sourceCode = getSourceCodeByRequireNode(callExprNode);
 
-            // getNodeByIdentifierNode will not work here, as the acquire will not return the node when the variable name is not on the same line.
-            const scopeVariable = sourceCode.scopeManager.scopes.find(s => s.set.has(variable.name))?.set.get(variable.name);
-            if (!scopeVariable) return false;
-
-            const variableDeclarator = (scopeVariable.identifiers[0] as ESTree.Identifier & { parent: ESTree.VariableDeclarator}).parent;
-            const declarationValue = variableDeclarator.init;
-
+            const declarationValue = getDeclarationValueForIdentifier(variable, context.getSourceCode());
             if (!declarationValue) return false;
 
             return traceValue(declarationValue, context, verify);
@@ -206,13 +217,13 @@ const traceValue = (node: ESTree.Node, context: RuleContext, verify: (node: ESTr
         }
     }
 
+    // const a = [1,2,3]
     else if (node.type === "ArrayExpression") {
-        // const a = [1,2,3]
         return true;
     }
 
+    // const a = new - type of expression (classes, Map etc.)
     else if (node.type === "NewExpression") {
-        // const a = new - type of expression (classes, Map etc.)
         return true;
     }
 
