@@ -158,22 +158,28 @@ const traceValue = (node: ESTree.Node, context: RuleContext, verify: (node: ESTr
 
             // The result of the require has an exports.default
             if (sourceCode.lines.find(l => l.includes("exports.default"))) {
-                const exportDefaultNode = getExportDefaultNode(sourceCode);
+                const exportDefaultNode = getExportDefaultNode(sourceCode); // Returns an Identifier Node
 
-                // The code line export.defaults = 11 is an Identifier node when doing getExportDefaultNode(sourceCode).
                 // The 'exports' part of the line is the Identifier.
                 if (exportDefaultNode.type !== "Identifier") return false;
-                // just accessing .parent.parent.right
+
+                // Accessing .parent.parent.right
                 const memberExpression = (exportDefaultNode as ESTree.Identifier & { parent: ESTree.MemberExpression }).parent;
                 const assignmentExpression = (memberExpression as ESTree.MemberExpression & { parent: ESTree.AssignmentExpression }).parent;
                 const declarationValue = (assignmentExpression as ESTree.AssignmentExpression).right;
 
                 if (declarationValue.type !== "Identifier" && declarationValue.type !== 'Literal') return false;
                 if (declarationValue.type === "Literal") verify(declarationValue);
-                else if (declarationValue.type === "Identifier") return traceValue(declarationValue, context, verify); // Does this work?
+                else if (declarationValue.type === "Identifier") return traceValue(declarationValue, context, verify);
             } else { // Assumption: When you do require('./context') and the file does not have exports.default - you get all the exported values.
-                // Create object of all exported values and call traceValue on the object
-                return true;
+                // Create array of all exported values and call traceValue on each value.
+                const exportLineIndices = sourceCode.lines.reduce((acc: number[], ele, index) => ele.includes("exports") ? [...acc, index] : acc, []);
+                const rangeIndices = exportLineIndices.map((exportLineIndex) => (sourceCode as SourceCode & { lineStartIndices: number[] }).lineStartIndices[exportLineIndex]);
+                const exportNodes = rangeIndices.map((rangeIndex) => (sourceCode.getNodeByRangeIndex(rangeIndex)));
+                // Access .parent .right
+                const valueNodes = exportNodes.map((n) => ((n as ESTree.Identifier & { parent: ESTree.AssignmentExpression}).parent as ESTree.AssignmentExpression).right);
+                const results = valueNodes.map((value) => traceValue(value, context, verify));
+                return results.includes(false);
             }
         }
         // If the callee type is Identifier - it is a function
@@ -189,6 +195,14 @@ const traceValue = (node: ESTree.Node, context: RuleContext, verify: (node: ESTr
         }
     }
 
+    /*
+    const getExportDefaultNode = (sourceCode: SourceCode): ESTree.Node => {
+    const lineIndex = sourceCode.lines.findIndex(l => l.includes("exports.default"));
+    const rangeIndex = (sourceCode as SourceCode & { lineStartIndices: number[] }).lineStartIndices[lineIndex];
+    return (sourceCode.getNodeByRangeIndex(rangeIndex) as ESTree.VariableDeclaration);
+}
+     */
+
     else if (node.type === "MemberExpression") {
         // const a = require('./context).a;
         if (isMemberExprRequireCall(node)) {
@@ -198,7 +212,7 @@ const traceValue = (node: ESTree.Node, context: RuleContext, verify: (node: ESTr
             const callExprNode = node.object as ESTree.CallExpression;
             const sourceCode = getSourceCodeByRequireNode(callExprNode);
 
-            const declarationValue = getDeclarationValueForIdentifier(variable, context.getSourceCode());
+            const declarationValue = getDeclarationValueForIdentifier(variable, sourceCode);
             if (!declarationValue) return false;
 
             return traceValue(declarationValue, context, verify);
