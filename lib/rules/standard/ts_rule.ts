@@ -171,8 +171,8 @@ const traceValue = (node: ESTree.Node, context: RuleContext, verify: (node: ESTr
                 if (declarationValue.type !== "Identifier" && declarationValue.type !== 'Literal') return false;
                 if (declarationValue.type === "Literal") verify(declarationValue);
                 else if (declarationValue.type === "Identifier") return traceValue(declarationValue, context, verify); // Does this work?
-            } else { // Assumption: When you do require('./context') and the file does not have exports.default - you get all the exported values
-                // Check all exported values
+            } else { // Assumption: When you do require('./context') and the file does not have exports.default - you get all the exported values.
+                // Create object of all exported values and call traceValue on the object
                 return true;
             }
         }
@@ -181,22 +181,12 @@ const traceValue = (node: ESTree.Node, context: RuleContext, verify: (node: ESTr
             const functionName = node.callee.name;
             const functionArgs = node.arguments;
         }
-    }
 
-    // const a = { url: 'https://google.com' }
-    else if (node.type === "ObjectExpression") {
-        const results = node.properties.map(p => {
-            if (p.type === "Property") return traceValue(p.value, context, verify);
-            else { // SpreadElement
-                const identifier = p.argument as ESTree.Identifier;
-
-                // Get value of identifier (it is an object)
-                const declarationValue = getDeclarationValueForIdentifier(identifier, context.getSourceCode());
-                if (!declarationValue) return false;
-                return traceValue(declarationValue, context, verify); // Call traceValue on the referenced object
-            }
-        })
-        return results.includes(false);
+        else if (node.callee.type === "MemberExpression") { // Array.from(new Map(["google", "https://google.com"]));
+            const argument = node.arguments[0];
+            if (argument.type === "NewExpression" && (argument.callee as ESTree.Identifier).name === "Map") return traceValue(argument, context, verify);
+            else return true;
+        }
     }
 
     else if (node.type === "MemberExpression") {
@@ -212,19 +202,92 @@ const traceValue = (node: ESTree.Node, context: RuleContext, verify: (node: ESTr
             if (!declarationValue) return false;
 
             return traceValue(declarationValue, context, verify);
-        } else { // Array.from(new Map(["google", "https://google.com"]));
+        } else {
             return true;
         }
     }
 
+    // const a = { url: 'https://google.com' }
+    else if (node.type === "ObjectExpression") {
+        const results = node.properties.map(p => {
+            if (p.type === "Property") return traceValue(p.value, context, verify);
+            else { // SpreadElement
+                const identifier = p.argument as ESTree.Identifier;
+
+                // Get value of identifier (it is an object)
+                const declarationValue = getDeclarationValueForIdentifier(identifier, context.getSourceCode());
+                if (!declarationValue) return false;
+                return traceValue(declarationValue, context, verify); // Call traceValue on the referenced object
+            }
+        });
+        return results.includes(false);
+    }
+
     // const a = [1,2,3]
     else if (node.type === "ArrayExpression") {
-        return true;
+        const results = node.elements.map((e) => {
+            if (!e) return true; // null is safe.
+            if (e.type === "Literal") return traceValue(e, context, verify);
+            else if (e.type === "SpreadElement") {
+                const identifier = e.argument as ESTree.Identifier;
+
+                // Get value of identifier (it is an array)
+                const declarationValue = getDeclarationValueForIdentifier(identifier, context.getSourceCode());
+                if (!declarationValue) return false;
+                return traceValue(declarationValue, context, verify); // Call traceValue on the referenced array.
+            } else return true;
+        });
+        return results.includes(false);
+    }
+
+    // const a = (s: string) => s + "son";
+    else if (node.type === "ArrowFunctionExpression") {
+        const args = node.params;
+        if (node.body.type === "CallExpression") return traceValue(node, context, verify);
+        else return true;
+    }
+
+    // function a(s: string){ return s + "son" }
+    else if (node.type === "FunctionDeclaration") {
+        const args = node.params;
+
+        // Body is array of statements
+        const result = node.body.body.map((statement) => {
+            if (statement.type === "ReturnStatement") {
+                if (!statement.argument) return true; // null or undefined is safe.
+                if (statement.argument.type === "CallExpression") return traceValue(statement.argument, context, verify);
+                else return true;
+            } else return true;
+        });
+        return result.includes(false);
     }
 
     // const a = new - type of expression (classes, Map etc.)
     else if (node.type === "NewExpression") {
-        return true;
+        if (node.callee.type === "Identifier" && node.callee.name === "Map") {
+            // Assumption: You can only provide 1 argument to a new Map call and the argument is always array of arrays.
+            const args = node.arguments[0] as ESTree.ArrayExpression;
+            const results = args.elements.map((e) => {
+                if (!e) return true; // null is safe
+                if (e.type === "ArrayExpression") {
+                    if (!e.elements[1]) return true // null is safe.
+                    // e.elements is array of key-value pair - check value
+                    return traceValue(e.elements[1], context, verify);
+                }
+                else if (e.type === "SpreadElement") {
+                    const identifier = e.argument as ESTree.Identifier;
+
+                    // Get value of identifier (it is an array)
+                    const declarationValue = getDeclarationValueForIdentifier(identifier, context.getSourceCode());
+                    if (!declarationValue) return false;
+                    console.log('decla', declarationValue);
+                    return traceValue(declarationValue, context, verify); // Call traceValue on the referenced array.
+                } else return true;
+            });
+            return results.includes(false);
+        } else { // new class instantiation
+            return true;
+        }
     }
 
     return true;
