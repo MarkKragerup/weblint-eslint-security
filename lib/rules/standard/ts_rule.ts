@@ -195,14 +195,6 @@ const traceValue = (node: ESTree.Node, context: RuleContext, verify: (node: ESTr
         }
     }
 
-    /*
-    const getExportDefaultNode = (sourceCode: SourceCode): ESTree.Node => {
-    const lineIndex = sourceCode.lines.findIndex(l => l.includes("exports.default"));
-    const rangeIndex = (sourceCode as SourceCode & { lineStartIndices: number[] }).lineStartIndices[lineIndex];
-    return (sourceCode.getNodeByRangeIndex(rangeIndex) as ESTree.VariableDeclaration);
-}
-     */
-
     else if (node.type === "MemberExpression") {
         // const a = require('./context).a;
         if (isMemberExprRequireCall(node)) {
