@@ -151,6 +151,38 @@ const traceValue = (node: ESTree.Node, context: RuleContext, verify: (node: ESTr
         return traceValue(declarationValue, context, verify);
     }
 
+    // const a = 1+1;
+    else if (node.type === "BinaryExpression") {
+        const leftResult = traceValue(node.left, context, verify);
+        const right = traceValue(node.left, context, verify);
+
+        // If either is false - return false
+        return leftResult && right;
+    }
+
+    // const b = `${a}son`;
+    else if (node.type === "TemplateLiteral") {
+        // Assumption: Only identifiers can be vulnerable
+        const identifiers = node.expressions.filter(n => n.type === "Identifier") as ESTree.Identifier[];
+
+        // Get all values for all identifiers
+        const identifierValues = identifiers.map((i) => getDeclarationValueForIdentifier(i, context.getSourceCode()));
+
+        // Verify all values
+        const results = identifierValues.map(v => v && traceValue(v, context, verify));
+
+        // If one of them is false return false.
+        return !results.includes(false);
+    }
+
+    // const b = a < 10 ? 'hej' : 'hejsa';
+    else if (node.type === "ConditionalExpression") {
+        const condition = node.test;
+        const ifTrueValue = node.consequent;
+        const ifFalseValue = node.alternate;
+        return true;
+    }
+
     else if (node.type === "CallExpression") {
         if (isRequireCall(node)) {
 
@@ -168,9 +200,10 @@ const traceValue = (node: ESTree.Node, context: RuleContext, verify: (node: ESTr
                 const assignmentExpression = (memberExpression as ESTree.MemberExpression & { parent: ESTree.AssignmentExpression }).parent;
                 const declarationValue = (assignmentExpression as ESTree.AssignmentExpression).right;
 
+                // Expand with analysis on object
                 if (declarationValue.type !== "Identifier" && declarationValue.type !== 'Literal') return false;
                 if (declarationValue.type === "Literal") verify(declarationValue);
-                else if (declarationValue.type === "Identifier") return traceValue(declarationValue, context, verify);
+                else if (declarationValue.type === "Identifier") return traceValue(declarationValue, context, verify); // Does it work on this context?
             } else { // Assumption: When you do require('./context') and the file does not have exports.default - you get all the exported values.
                 // Create array of all exported values and call traceValue on each value.
                 const exportLineIndices = sourceCode.lines.reduce((acc: number[], ele, index) => ele.includes("exports") ? [...acc, index] : acc, []);
@@ -179,7 +212,9 @@ const traceValue = (node: ESTree.Node, context: RuleContext, verify: (node: ESTr
                 // Access .parent .right
                 const valueNodes = exportNodes.map((n) => ((n as ESTree.Identifier & { parent: ESTree.AssignmentExpression}).parent as ESTree.AssignmentExpression).right);
                 const results = valueNodes.map((value) => traceValue(value, context, verify));
-                return results.includes(false);
+
+                // If one of them is false return false.
+                return !(results.includes(false));
             }
         }
         // If the callee type is Identifier - it is a function
@@ -226,7 +261,8 @@ const traceValue = (node: ESTree.Node, context: RuleContext, verify: (node: ESTr
                 return traceValue(declarationValue, context, verify); // Call traceValue on the referenced object
             }
         });
-        return results.includes(false);
+        // If one of them is false return false
+        return !(results.includes(false));
     }
 
     // const a = [1,2,3]
@@ -243,7 +279,8 @@ const traceValue = (node: ESTree.Node, context: RuleContext, verify: (node: ESTr
                 return traceValue(declarationValue, context, verify); // Call traceValue on the referenced array.
             } else return true;
         });
-        return results.includes(false);
+        // If one of them is false return false
+        return !(results.includes(false));
     }
 
     // const a = (s: string) => s + "son";
@@ -254,18 +291,20 @@ const traceValue = (node: ESTree.Node, context: RuleContext, verify: (node: ESTr
     }
 
     // function a(s: string){ return s + "son" }
+    // Remember this is also a method in a class
     else if (node.type === "FunctionDeclaration") {
         const args = node.params;
 
         // Body is array of statements
-        const result = node.body.body.map((statement) => {
+        const results = node.body.body.map((statement) => {
             if (statement.type === "ReturnStatement") {
                 if (!statement.argument) return true; // null or undefined is safe.
                 if (statement.argument.type === "CallExpression") return traceValue(statement.argument, context, verify);
                 else return true;
             } else return true;
         });
-        return result.includes(false);
+        // If one of them is false return false
+        return !(results.includes(false));
     }
 
     // const a = new - type of expression (classes, Map etc.)
@@ -286,14 +325,45 @@ const traceValue = (node: ESTree.Node, context: RuleContext, verify: (node: ESTr
                     // Get value of identifier (it is an array)
                     const declarationValue = getDeclarationValueForIdentifier(identifier, context.getSourceCode());
                     if (!declarationValue) return false;
-                    console.log('decla', declarationValue);
                     return traceValue(declarationValue, context, verify); // Call traceValue on the referenced array.
                 } else return true;
             });
             return results.includes(false);
         } else { // new class instantiation
-            return true;
+            if (node.callee.type === "Identifier") {
+                const classIdentifier = node.callee as ESTree.Identifier;
+                const sourceCode = context.getSourceCode();
+
+                // Line indices for all class declarations
+                const lineIndices = sourceCode.lines.reduce((acc: number[], ele, index) => ele.includes("class") ? [...acc, index] : acc, []);
+                const rangeIndices = lineIndices.map((lineIndex) => (sourceCode as SourceCode & { lineStartIndices: number[] }).lineStartIndices[lineIndex]);
+                const classNodes = rangeIndices.map((rangeIndex) => sourceCode.getNodeByRangeIndex(rangeIndex)) as ESTree.ClassDeclaration[];
+
+                // Find the correct class.
+                const classNode = classNodes.find((c) => c.id && c.id.name === classIdentifier.name);
+
+                // The class is not declared in the same file as it is instantiated.
+                if (!classNode) return false;
+
+                // Call traceValue on the ClassDeclaration Node
+                return traceValue(classNode, context, verify);
+            } else return false;
         }
+    }
+
+    else if (node.type === "ClassDeclaration") {
+        const classBody = node.body.body;
+        const properties = classBody.filter((ele) => ele.type === "PropertyDefinition");
+        const methods = classBody.filter((ele) => ele.type === "MethodDefinition");
+
+        // Verify all default values on all properties
+        const propertyResults = properties.map((p) => p.value && traceValue(p.value, context, verify));
+
+        // Verify all methods
+        const methodResults = methods.map(m => m.value && traceValue(m.value, context, verify));
+
+        // If a property or a method is unsafe return false.
+        return !(propertyResults.includes(false) || methodResults.includes(false));
     }
 
     return true;
@@ -322,6 +392,4 @@ const getSourceCodeByRequireNode = (node: ESTree.CallExpression, configObject?: 
     linter.verify(fileContents, configObject ?? { rules: { semi: 2 } });
 
     return linter.getSourceCode();
-
-    // console.log('ast', linter.getSourceCode());
 }
