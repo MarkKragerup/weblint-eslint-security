@@ -116,6 +116,7 @@ type IValidVariableNode = ESTree.VariableDeclaration | ESTree.CallExpression;
 // Assumption - identifier nodes does always get declared in the same file.
 const getDeclarationValueForIdentifier = (identifier: ESTree.Identifier, srcCode: SourceCode): ESTree.Expression | undefined => {
     const scopeVariable = srcCode.scopeManager.scopes.find(s => s.set.has(identifier.name))?.set.get(identifier.name);
+    console.log('scope', scopeVariable);
     if (!scopeVariable) return undefined;
 
     const variableDeclarator = (scopeVariable.identifiers[0] as ESTree.Identifier & { parent: ESTree.VariableDeclarator}).parent;
@@ -153,6 +154,7 @@ const traceValue = (node: ESTree.Node, context: RuleContext, verify: (node: ESTr
 
     // const a = 1+1;
     else if (node.type === "BinaryExpression") {
+        console.log('I am here');
         const leftResult = traceValue(node.left, context, verify);
         const right = traceValue(node.left, context, verify);
 
@@ -260,11 +262,30 @@ const traceValue = (node: ESTree.Node, context: RuleContext, verify: (node: ESTr
             const callExprNode = node.object as ESTree.CallExpression;
             const sourceCode = getSourceCodeByRequireNode(callExprNode);
 
-            const declarationValue = getDeclarationValueForIdentifier(variable, sourceCode);
-            if (!declarationValue) return false;
+            // The value of the variable is either declared in a variable declaration somewhere or inline in the exports.default
+            // If there is not an exports.default - it must be in a variable.
+            if (!sourceCode.lines.find(l => l.includes("exports.default"))) {
+                const declarationValue = getDeclarationValueForIdentifier(variable, sourceCode);
+                if (!declarationValue) return false;
+                return traceValue(declarationValue, context, verify);
+            } else {
+                const exportDefaultNode = getExportDefaultNode(sourceCode); // Returns an Identifier Node
 
-            return traceValue(declarationValue, context, verify);
-        } else {
+                // The 'exports' part of the line is the Identifier.
+                if (exportDefaultNode.type !== "Identifier") return false;
+
+                // Access .parent.parent.right
+                const memberExpression = (exportDefaultNode as ESTree.Identifier & { parent: ESTree.MemberExpression }).parent;
+                const assignmentExpression = (memberExpression as ESTree.MemberExpression & { parent: ESTree.AssignmentExpression }).parent;
+                const declarationValue = (assignmentExpression as ESTree.AssignmentExpression).right;
+                if (!declarationValue) return false;
+                if (declarationValue.type === "ObjectExpression") {
+                    const correctVariable = (declarationValue.properties.find(p => p.type === "Property" && (p.key as ESTree.Identifier).name === variable.name) as ESTree.Property).value;
+                    if (!correctVariable) return false;
+                    return traceValue(correctVariable, context, verify);
+                } else return true;
+            }
+        } else { // MemberExpression but not require call
             return true;
         }
     }
