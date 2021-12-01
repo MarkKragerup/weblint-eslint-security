@@ -188,6 +188,8 @@ const traceValue = (node: ESTree.Node, context: RuleContext, verify: (node: ESTr
 
             const sourceCode = getSourceCodeByRequireNode(node);
 
+            console.log('here', sourceCode);
+
             // The result of the require has an exports.default
             if (sourceCode.lines.find(l => l.includes("exports.default"))) {
                 const exportDefaultNode = getExportDefaultNode(sourceCode); // Returns an Identifier Node
@@ -195,15 +197,34 @@ const traceValue = (node: ESTree.Node, context: RuleContext, verify: (node: ESTr
                 // The 'exports' part of the line is the Identifier.
                 if (exportDefaultNode.type !== "Identifier") return false;
 
-                // Accessing .parent.parent.right
+                // Access .parent.parent.right
                 const memberExpression = (exportDefaultNode as ESTree.Identifier & { parent: ESTree.MemberExpression }).parent;
                 const assignmentExpression = (memberExpression as ESTree.MemberExpression & { parent: ESTree.AssignmentExpression }).parent;
                 const declarationValue = (assignmentExpression as ESTree.AssignmentExpression).right;
 
-                // Expand with analysis on object
-                if (declarationValue.type !== "Identifier" && declarationValue.type !== 'Literal') return false;
-                if (declarationValue.type === "Literal") verify(declarationValue);
-                else if (declarationValue.type === "Identifier") return traceValue(declarationValue, context, verify); // Does it work on this context?
+                console.log('decl', declarationValue);
+                // Does calling traceValue like this work when its from another code file?
+                if (declarationValue.type === "Literal" || declarationValue.type === "Identifier") return traceValue(declarationValue, context, verify);
+                // Assumption - the exported value can only be an identifier, literal or object.
+                else {
+                    const results = (declarationValue as ESTree.ObjectExpression).properties.map(p => {
+                        if (p.type === "Property") {
+                            console.log('p1', p);
+                            return traceValue(declarationValue, context, verify);
+                        }
+                        else { // SpreadElement
+                            console.log('p2', p);
+                            const identifier = p.argument as ESTree.Identifier;
+
+                            // Get value of identifier (it is an object)
+                            const declarationValue = getDeclarationValueForIdentifier(identifier, sourceCode);
+                            if (!declarationValue) return false;
+                            return traceValue(declarationValue, context, verify); // Call traceValue on the referenced object.
+                        }
+                    });
+                    // If one of them is false return false
+                    return !(results.includes(false));
+                }
             } else { // Assumption: When you do require('./context') and the file does not have exports.default - you get all the exported values.
                 // Create array of all exported values and call traceValue on each value.
                 const exportLineIndices = sourceCode.lines.reduce((acc: number[], ele, index) => ele.includes("exports") ? [...acc, index] : acc, []);
