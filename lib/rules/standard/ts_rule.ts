@@ -116,7 +116,6 @@ type IValidVariableNode = ESTree.VariableDeclaration | ESTree.CallExpression;
 // Assumption - identifier nodes does always get declared in the same file.
 const getDeclarationValueForIdentifier = (identifier: ESTree.Identifier, srcCode: SourceCode): ESTree.Expression | undefined => {
     const scopeVariable = srcCode.scopeManager.scopes.find(s => s.set.has(identifier.name))?.set.get(identifier.name);
-    console.log('scope', scopeVariable);
     if (!scopeVariable) return undefined;
 
     const variableDeclarator = (scopeVariable.identifiers[0] as ESTree.Identifier & { parent: ESTree.VariableDeclarator}).parent;
