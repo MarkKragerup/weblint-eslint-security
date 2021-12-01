@@ -154,7 +154,6 @@ const traceValue = (node: ESTree.Node, context: RuleContext, verify: (node: ESTr
 
     // const a = 1+1;
     else if (node.type === "BinaryExpression") {
-        console.log('I am here');
         const leftResult = traceValue(node.left, context, verify);
         const right = traceValue(node.left, context, verify);
 
