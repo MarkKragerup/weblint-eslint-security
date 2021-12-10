@@ -25,7 +25,7 @@ Include Weblint security plugin in your **.eslintrc.json** configuration file ("
     },
     "plugins": [
         "weblint-security"
-    ].
+    ],
     "extends": [
         "eslint:recommended",
         "plugin:weblint-security/recommended"
