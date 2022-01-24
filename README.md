@@ -2,7 +2,7 @@
 [![npm version](https://img.shields.io/npm/v/eslint-plugin-weblint-security.svg)](https://www.npmjs.com/package/eslint-plugin-weblint-security)
 [![Downloads/month](https://img.shields.io/npm/dm/eslint-plugin-weblint-security.svg)](http://www.npmtrends.com/eslint-plugin-weblint-security)
 
-Additional ESLint security rules for Javascript, React and Node.js / Express!
+Additional ESLint security rules for JavaScript, React and Node.js / Express!
 
 ## 💿 Installation
 Install ESLint either locally or globally. (Note that locally, per project, is strongly preferred)
@@ -94,8 +94,8 @@ For **Node.js** projects, include the **Node.js specific** rules and configurati
 
 | **Rule ID** | **Description** |    |
 |:--------|:------------|:--:|
-| [detect-sql-injection](https://github.com/MarkKragerup/weblint-eslint-security/blob/master/docs/rules/detect-sql-injection.md) | Detect the usage of SQL queries that might be </br>vulnerable to SQL Injections. |  |
-| [detect-missing-helmet](https://github.com/MarkKragerup/weblint-eslint-security/blob/master/docs/rules/detect-missing-helmet) | Disallow use of ExpressJS applications without <br/>the use of Helmet.js defaults, due to the concern that </br>the HTTP headers might be insecurely configured. | ✒️ |
+| [detect-sql-injection](https://github.com/MarkKragerup/weblint-eslint-security/blob/master/docs/rules/detect_sql_injection.md) | Detect the usage of SQL queries that might be </br>vulnerable to SQL Injections. |  |
+| [detect-missing-helmet](https://github.com/MarkKragerup/weblint-eslint-security/blob/master/docs/rules/detect_missing_helmet.md) | Disallow use of ExpressJS applications without <br/>the use of Helmet.js defaults, due to the concern that </br>the HTTP headers might be insecurely configured. | ✒️ |
 
 ## ❤️ Contributions
 We welcome contributions!
